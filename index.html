@@ -356,7 +356,7 @@
 
     .progress-fill {
       height: 100%;
-      width: 20%;
+      width: 30%;
       background: linear-gradient(90deg, var(--accent-blue), var(--accent-emerald));
       border-radius: 9999px;
       transition: width 0.4s ease;
@@ -901,8 +901,8 @@
 
       <div class="course-progress-card">
         <div class="progress-header">
-          <span>Progresso do Curso: 2 de 10 Aulas Prontas</span>
-          <span style="color:var(--accent-emerald);">20% Concluído</span>
+          <span>Progresso do Curso: 3 de 10 Aulas Prontas</span>
+          <span style="color:var(--accent-emerald);">30% Concluído</span>
         </div>
         <div class="progress-track">
           <div class="progress-fill"></div>
@@ -931,7 +931,7 @@
       <!-- Filtros Rápidos -->
       <div class="filter-pills">
         <button class="filter-btn active" data-filter="all">Todas as Aulas (10)</button>
-        <button class="filter-btn" data-filter="ready">Disponíveis (2)</button>
+        <button class="filter-btn" data-filter="ready">Disponíveis (3)</button>
         <button class="filter-btn" data-filter="gpio">I/O Digital & Teclas</button>
         <button class="filter-btn" data-filter="displays">Displays & LCD</button>
         <button class="filter-btn" data-filter="timers">Timers & Interrupções</button>
@@ -1020,25 +1020,28 @@
       </article>
 
       <!-- ========================================== -->
-      <!-- AULA 03 (EM BREVE)                         -->
+      <!-- AULA 03 (DISPONÍVEL)                       -->
       <!-- ========================================== -->
-      <article class="lesson-card upcoming" data-category="displays" data-status="soon"
-        data-keywords="aula 03 displays 7 segmentos multiplexacao varredura decodificador catodo anodo comum">
+      <article class="lesson-card available" data-category="displays" data-status="ready"
+        data-keywords="aula 03 displays 7 segmentos 74hc595 multiplexacao varredura persistencia da visao decodificador catodo comum portd re0 re1 re2">
         <div>
           <div class="card-top">
             <span class="lesson-number">Aula 03</span>
-            <span class="status-badge status-soon">Em Breve</span>
+            <span class="status-badge status-ready">
+              <span class="status-dot"></span> Disponível
+            </span>
           </div>
-          <h3 class="card-title">Displays de 7 Segmentos e Multiplexação Temporal</h3>
+          <h3 class="card-title">Displays de 7 Segmentos e Multiplexação Temporal com 74HC595</h3>
           <p class="card-desc">
-            Acionamento de múltiplos dígitos de display de 7 segmentos por varredura rápida, tabela de decodificação
-            hexadecimal/decimal, persistência de visão e economia de pinos de I/O.
+            Controle de 4 dígitos de 7 segmentos na placa ACEPIC PRO via registrador de deslocamento 74HC595 (RE0..RE2) e barramento PORTD (RD0..RD3), multiplexação por varredura rápida, eliminação de fantasmas visuais e simulador interativo com câmera lenta.
           </p>
           <div class="topic-tags">
             <span class="tag-item">#Display7Seg</span>
+            <span class="tag-item">#74HC595D</span>
             <span class="tag-item">#Multiplexacao</span>
-            <span class="tag-item">#TabelasEmC</span>
-            <span class="tag-item">#Contador</span>
+            <span class="tag-item">#PersistenciaVisao</span>
+            <span class="tag-item">#PORTD</span>
+            <span class="tag-item">#Simulador7Seg</span>
           </div>
         </div>
         <div class="card-footer">
@@ -1047,9 +1050,11 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            <span>~50 min</span>
+            <span>~50 min de prática</span>
           </div>
-          <span class="btn-action btn-disabled">Em Produção</span>
+          <a href="classes/aula_03_arquivo_unico.html" class="btn-action btn-primary">
+            Acessar Aula 03 →
+          </a>
         </div>
       </article>
 
@@ -1380,6 +1385,8 @@
 
       <ul class="footer-links">
         <li><a href="classes/aula_01_arquivo_unico.html">Aula 01</a></li>
+        <li><a href="classes/aula_02_arquivo_unico.html">Aula 02</a></li>
+        <li><a href="classes/aula_03_arquivo_unico.html">Aula 03</a></li>
         <li><a href="#aulas">Grade de Aulas</a></li>
         <li><a href="#hardware">Hardware & Downloads</a></li>
         <li><a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})">Topo ↑</a></li>

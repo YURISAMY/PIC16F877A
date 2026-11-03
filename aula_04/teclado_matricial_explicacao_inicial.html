@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teclado matricial 4x4: fluxo da corrente</title>
+<style>
+:root{
+  --bg:#FAFAF7; --card:#FFFFFF; --text:#1F1E1B; --muted:#5F5E5A;
+  --line:#B4B2A9; --stroke:#888780; --key:#FFFFFF; --keyline:#888780;
+  --hot:#FAC775; --hotline:#BA7517; --flow:#EF9F27;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1B1B19; --card:#262624; --text:#F1EFE8; --muted:#B4B2A9;
+    --line:#5F5E5A; --stroke:#B4B2A9; --key:#2C2C2A; --keyline:#888780;
+    --hot:#854F0B; --hotline:#EF9F27; --flow:#EF9F27;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px 16px}
+main{max-width:720px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}
+p.sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:inherit;fill:var(--text);font-size:12px}
+svg text.th{font-size:14px;font-weight:500}
+svg .mut{fill:var(--muted)}
+.key{cursor:pointer}
+.key:focus-visible rect{outline:2px solid var(--flow);outline-offset:2px}
+#info{margin-top:12px;font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){ .flow{animation:fl .8s linear infinite} }
+@keyframes fl{to{stroke-dashoffset:-14}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Teclado matricial 4x4</h1>
+  <p class="sub">Clique em uma tecla para ver o caminho da corrente (sentido convencional).</p>
+  <div class="card">
+    <svg id="m" viewBox="0 0 680 380" role="img" aria-label="Teclado matricial 4x4 com linhas RB0 a RB3 e colunas RB4 a RB7">
+      <g id="base"></g>
+      <g id="keys"></g>
+      <path id="flow" class="flow" fill="none" stroke="#EF9F27" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 6" d=""/>
+    </svg>
+    <div id="info" aria-live="polite"></div>
+  </div>
+</main>
+<script>
+const K=[['1','2','3','A'],['4','5','6','B'],['7','8','9','C'],['*','0','#','D']];
+const R=[120,180,240,300], C=[250,360,470,580];
+
+let s='<line x1="230" y1="24" x2="600" y2="24" stroke="var(--stroke)" stroke-width="1.5"/><text class="mut" x="196" y="28">VDD</text>';
+C.forEach((x,i)=>{
+  s+='<line x1="'+x+'" y1="24" x2="'+x+'" y2="330" stroke="var(--line)" stroke-width="1.5"/>';
+  s+='<rect x="'+(x-7)+'" y="40" width="14" height="26" rx="2" fill="var(--card)" stroke="var(--stroke)"/>';
+  s+='<text class="mut" x="'+(x+14)+'" y="57">pull-up</text>';
+  s+='<text id="c'+i+'" x="'+x+'" y="354" text-anchor="middle"></text>';
+});
+R.forEach((y,i)=>{
+  s+='<line x1="62" y1="'+y+'" x2="600" y2="'+y+'" stroke="var(--line)" stroke-width="1.5"/>';
+  s+='<rect x="70" y="'+(y-7)+'" width="40" height="14" rx="2" fill="var(--card)" stroke="var(--stroke)"/>';
+  s+='<text class="mut" x="90" y="'+(y-14)+'" text-anchor="middle">470 Ω</text>';
+  s+='<text id="r'+i+'" x="8" y="'+(y-14)+'"></text>';
+});
+document.getElementById('base').innerHTML=s;
+
+let k='';
+K.forEach((row,r)=>row.forEach((t,c)=>{
+  k+='<g class="key" tabindex="0" role="button" aria-label="Tecla '+t+'" data-r="'+r+'" data-c="'+c+'">'
+   +'<rect id="k'+r+c+'" x="'+(C[c]-15)+'" y="'+(R[r]-15)+'" width="30" height="30" rx="4" fill="var(--key)" stroke="var(--keyline)"/>'
+   +'<text class="th" x="'+C[c]+'" y="'+R[r]+'" text-anchor="middle" dominant-baseline="central">'+t+'</text></g>';
+}));
+document.getElementById('keys').innerHTML=k;
+
+function press(r,c){
+  K.forEach((row,i)=>row.forEach((t,j)=>{
+    const e=document.getElementById('k'+i+j), on=(i===r&&j===c);
+    e.setAttribute('fill',on?'var(--hot)':'var(--key)');
+    e.setAttribute('stroke',on?'var(--hotline)':'var(--keyline)');
+    e.setAttribute('stroke-width',on?'2':'1');
+  }));
+  document.getElementById('flow').setAttribute('d','M'+C[c]+' 24 L'+C[c]+' '+R[r]+' L62 '+R[r]);
+  for(let i=0;i<4;i++){
+    const a=document.getElementById('r'+i);
+    a.textContent='RB'+i+' = '+(i===r?'0':'1');
+    a.setAttribute('class',i===r?'th':'');
+    const b=document.getElementById('c'+i);
+    b.textContent='RB'+(4+i)+' lê '+(i===c?'0':'1');
+    b.setAttribute('class',i===c?'th':'');
+  }
+  document.getElementById('info').textContent='Tecla '+K[r][c]+': com RB'+r+' em 0, a corrente sai do VDD, desce pelo pull-up da coluna RB'+(4+c)+', atravessa a tecla e segue pela linha RB'+r+' e pelo resistor de 470 Ω até o pino em 0 V. Por isso RB'+(4+c)+' lê 0.';
+}
+
+document.querySelectorAll('.key').forEach(g=>{
+  const go=()=>press(+g.dataset.r,+g.dataset.c);
+  g.addEventListener('click',go);
+  g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();go();} });
+});
+press(1,2);
+</script>
+</body>
+</html>
